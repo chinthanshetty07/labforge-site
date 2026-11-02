@@ -1,0 +1,11 @@
+[
+  {"slug": "kubernetes-first-deploy", "title": "Deploy your first app on Kubernetes", "duration": "90 minutes", "level": "Beginner",
+   "summary": "Learners create a cluster, deploy a container, expose it with a service and scale it, in a sandbox that resets after the session.",
+   "skills": ["kubectl basics", "Deployments and Services", "Scaling and rollouts"]},
+  {"slug": "terraform-landing-zone", "title": "Build a landing zone with Terraform", "duration": "2 hours", "level": "Intermediate",
+   "summary": "Learners write Terraform for a network, a storage account and role assignments, then plan and apply it against a real subscription.",
+   "skills": ["Terraform modules", "State and plans", "Least-privilege roles"]},
+  {"slug": "secure-a-web-api", "title": "Secure a web API end to end", "duration": "75 minutes", "level": "Intermediate",
+   "summary": "Learners add authentication to an API, put it behind a gateway with rate limits and read the logs of a blocked attack.",
+   "skills": ["OAuth 2.0 tokens", "API gateway policies", "Reading access logs"]}
+]

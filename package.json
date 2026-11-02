@@ -1,0 +1,19 @@
+{
+  "name": "labforge-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "seo": "node scripts/seo-check.mjs dist",
+    "test:e2e": "playwright test",
+    "check": "npm run build && npm run seo && npm run test:seo && npm run test:e2e",
+    "test:seo": "node --test scripts/seo-check.test.mjs"
+  },
+  "dependencies": {
+    "astro": "5.7.10"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.49.1"
+  }
+}

@@ -1,0 +1,69 @@
+---
+---
+<form id="demo-form" novalidate aria-labelledby="demo-heading">
+  <div class="field"><label for="name">Name</label><input id="name" name="name" autocomplete="name" required />
+    <p class="error" id="name-error" hidden></p></div>
+  <div class="field"><label for="email">Work email</label><input id="email" name="email" type="email" autocomplete="email" required />
+    <p class="error" id="email-error" hidden></p></div>
+  <div class="field"><label for="company">Company</label><input id="company" name="company" autocomplete="organization" required />
+    <p class="error" id="company-error" hidden></p></div>
+  <div class="field"><label for="learners">Number of learners</label>
+    <select id="learners" name="learners" required>
+      <option value="">Choose one</option><option>1–25</option><option>26–100</option><option>101–500</option><option>500+</option>
+    </select><p class="error" id="learners-error" hidden></p></div>
+  <button class="btn" type="submit">Book a demo</button>
+  <p id="form-status" role="status" class="ok"></p>
+</form>
+<style>
+  form { display:grid; gap:12px; max-width:480px; }
+  label { display:block; font-weight:600; margin-bottom:4px; }
+  input, select { width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; font:inherit; }
+  [aria-invalid="true"] { border-color: var(--err); }
+  .error { color: var(--err); margin:4px 0 0; font-size:14px; }
+  .ok { color: var(--ok); font-weight:600; }
+</style>
+<script>
+  const PERSONAL = new Set(['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com']);
+  const form = document.getElementById('demo-form') as HTMLFormElement;
+  const status = document.getElementById('form-status')!;
+
+  function check(el: HTMLInputElement | HTMLSelectElement): string {
+    const v = el.value.trim();
+    if (!v) return 'This field is required';
+    if (el.name === 'email') {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return 'Enter a valid email address';
+      if (PERSONAL.has(v.split('@')[1].toLowerCase())) return 'Please use your work email';
+    }
+    return '';
+  }
+
+  function show(el: HTMLInputElement | HTMLSelectElement, msg: string) {
+    const err = document.getElementById(`${el.id}-error`)!;
+    err.textContent = msg;
+    err.hidden = !msg;
+    el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    if (msg) el.setAttribute('aria-describedby', err.id); else el.removeAttribute('aria-describedby');
+  }
+
+  const fields = [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select')];
+  for (const el of fields) {
+    // Clear an error as soon as the field becomes valid, but don't nag while the user is still typing.
+    el.addEventListener('input', () => { if (el.getAttribute('aria-invalid') === 'true') show(el, check(el)); });
+    el.addEventListener('change', () => { if (el.getAttribute('aria-invalid') === 'true') show(el, check(el)); });
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();                       // static site: nothing is sent anywhere
+    status.textContent = '';
+    let firstInvalid: HTMLElement | null = null;
+    for (const el of fields) {
+      const msg = check(el);
+      show(el, msg);
+      if (msg && !firstInvalid) firstInvalid = el;
+    }
+    if (firstInvalid) { firstInvalid.focus(); return; }
+    form.reset();
+    fields.forEach((el) => show(el, ''));
+    status.textContent = "Thanks, we'll be in touch within 1 working day";
+  });
+</script>

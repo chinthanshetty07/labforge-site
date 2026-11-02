@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import labs from '../../data/labs.json';
+
+export function getStaticPaths() {
+  return labs.map((lab) => ({ params: { slug: lab.slug }, props: { lab } }));
+}
+const { lab } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'Course', name: lab.title, description: lab.summary,
+  provider: { '@type': 'Organization', name: 'LabForge' },
+}];
+---
+<Base title={`${lab.title} | LabForge lab`} description={lab.summary} jsonLd={jsonLd}>
+  <p><a href={base}>← All labs</a></p>
+  <h1>{lab.title}</h1>
+  <p class="muted"><span data-testid="duration">{lab.duration}</span> · <span data-testid="level">{lab.level}</span></p>
+  <p>{lab.summary}</p>
+  <h2>Skills covered</h2>
+  <ul data-testid="skills">{lab.skills.map((s) => <li>{s}</li>)}</ul>
+  <p><a class="btn" href={`${base}#demo`}>Book a demo</a></p>
+</Base>

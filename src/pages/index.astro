@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import DemoForm from '../components/DemoForm.astro';
+import labs from '../data/labs.json';
+const base = import.meta.env.BASE_URL;
+const faqs = [
+  { q: 'Do learners need their own cloud account?', a: 'No. Each learner gets a fresh, isolated environment that is created when the lab starts and deleted when it ends.' },
+  { q: 'How do you stop runaway cloud costs?', a: 'Every lab has a time limit and a spending cap, and resources are cleaned up automatically when either is reached.' },
+  { q: 'Can I bring my own lab content?', a: 'Yes. Trainers can write lab guides in Markdown and attach their own templates for the environment.' },
+];
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'Organization', name: 'LabForge', url: Astro.site?.href, description: 'Ready-to-run cloud lab environments for technical training.' },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+---
+<Base title="LabForge: hands-on cloud labs for trainers" description="Give every learner a ready-to-run cloud environment for your course, with time limits, spending caps and automatic clean-up." jsonLd={jsonLd}>
+  <section>
+    <h1>Hands-on cloud labs your learners can start in one click</h1>
+    <p class="muted">LabForge creates an isolated cloud environment for each learner, guides them through the exercise and cleans it up afterwards.</p>
+    <a class="btn" href="#demo">Book a demo</a>
+  </section>
+
+  <section aria-labelledby="features-heading">
+    <h2 id="features-heading">What you get</h2>
+    <div class="grid" data-testid="features">
+      <article class="card"><h3>One environment per learner</h3><p>Each learner works in their own sandbox, so one mistake never breaks the class.</p></article>
+      <article class="card"><h3>Costs you can predict</h3><p>Time limits and spending caps stop a forgotten lab from running all weekend.</p></article>
+      <article class="card"><h3>Progress you can see</h3><p>Trainers see which step each learner is on and where the class gets stuck.</p></article>
+    </div>
+  </section>
+
+  <section aria-labelledby="labs-heading">
+    <h2 id="labs-heading">Popular labs</h2>
+    <ul data-testid="lab-links">
+      {labs.map((l) => <li><a href={`${base}labs/${l.slug}/`}>{l.title}</a> <span class="muted">({l.duration}, {l.level})</span></li>)}
+    </ul>
+  </section>
+
+  <section aria-labelledby="faq-heading">
+    <h2 id="faq-heading">Questions trainers ask</h2>
+    {faqs.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+  </section>
+
+  <section id="demo" aria-labelledby="demo-heading">
+    <h2 id="demo-heading">Book a demo</h2>
+    <DemoForm />
+  </section>
+</Base>

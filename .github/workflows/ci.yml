@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.49.1-jammy
+    steps:
+      - uses: actions/checkout@v7
+      - run: npm ci
+      - run: npm run build
+      - name: Technical SEO and brand-voice check
+        run: npm run seo
+      - name: The SEO checker fails on broken pages
+        run: npm run test:seo
+      - name: Spec acceptance criteria (Playwright)
+        run: npx playwright test
+        env:
+          HOME: /root
